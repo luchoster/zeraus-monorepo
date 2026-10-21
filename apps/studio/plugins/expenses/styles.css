@@ -1,0 +1,294 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.parentWrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  @nest & > * + * {
+    margin-top: var(--medium-padding);
+  }
+}
+
+.aside {
+  background: url('./images/distortioned-image-2-sm.jpg') center / cover
+    no-repeat;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 150px;
+}
+
+.container {
+  align-items: center;
+  box-sizing: border-box;
+  display: block;
+  display: grid;
+  flex-grow: 1;
+  grid-gap: 1em;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  padding-top: 50;
+  position: relative;
+}
+
+.root {
+  overflow: scroll;
+  max-height: 100%;
+  margin: 0 auto;
+  padding: 24px 16px;
+  padding: 1.5rem 1rem;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.header {
+  border-bottom: 1px solid white;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-bottom: 20px;
+}
+
+.title {
+}
+
+.panel {
+  align-items: center;
+  background: white;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: grid;
+  padding: 1rem;
+  width: 100%;
+}
+
+.content {
+  margin: 40px auto;
+}
+
+.accordionHeading {
+  flex-basis: 33.33%;
+  flex-shrink: 0;
+}
+.accordionSubHeading {
+  padding-left: 20px;
+  color: gray;
+}
+
+.paymentStatus {
+  text-transform: capitalize;
+}
+
+.textCentered {
+  text-align: center;
+}
+
+.generateInvoiceIcon {
+  cursor: pointer;
+}
+
+.hideMobile {
+  display: none;
+}
+
+.buttons-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+}
+
+.footer {
+  border-top: 1px solid var(--hairline-color);
+}
+
+.tableContainer {
+  opacity: 1;
+}
+
+.tableHeader {
+  background: #101728;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: grid;
+  font-weight: 600;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 20px 0;
+  position: sticky;
+  top: -24px;
+  z-index: 5;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 40px 0;
+  /* border: 1px solid rgba(0, 0, 0, 0.5); */
+}
+
+/* e15d55 */
+/* 874da2 */
+.invoiceContainer {
+  background-color: white !important;
+  border: 1px solid white;
+  font-family: Quicksand, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  margin: 0;
+  padding: 20px;
+  @nest & header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    padding-bottom: 25px;
+    @nest & .invoiceLogo {
+      text-align: left;
+      color: #191919;
+      @nest & img {
+        max-width: 96px;
+      }
+    }
+    @nest & .invoiceDate {
+      text-align: right;
+      color: #191919;
+      @nest & p {
+        margin-top: 0;
+      }
+    }
+  }
+  @nest & hr {
+    background: #874da2;
+    height: 3px;
+    border: 0;
+  }
+  @nest & .invoiceClientInfo {
+    padding: 30px 0;
+    text-align: left;
+
+    @nest & .clientName {
+      color: #191919;
+      font-size: 30px;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    @nest & .clientContact {
+      color: #1d1d1b;
+      font-size: 20px;
+      font-weight: 300;
+    }
+    @nest & .clientDetails {
+      color: #1d1d1b;
+      font-size: 20px;
+      font-weight: 300;
+      padding: 0;
+      margin: 0;
+    }
+    @nest & .invoiceDetails {
+      padding: 30px 0;
+      @nest & .invoiceDetailsHeading {
+        align-items: center;
+        color: #e15d55;
+        border-bottom: 2px solid #874da2;
+        display: grid;
+        grid-template-columns: 4fr 1fr 1fr 1fr;
+        grid-gap: 10px;
+        padding: 10px 0;
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+        text-align: center;
+        @nest & > div:first-child {
+          text-align: left;
+        }
+        @nest & > div:last-child {
+          text-align: right;
+        }
+      }
+      @nest & .invoiceDetailsContent {
+        align-items: center;
+        color: #191919;
+        font-family: 'Montserrat', sans-serif;
+        display: grid;
+        font-size: 14px;
+        grid-gap: 10px;
+        grid-row-gap: 30px;
+        grid-template-columns: 4fr 1fr 1fr 1fr;
+        padding: 20px 0;
+        text-align: center;
+        @nest & .desc {
+          text-align: left;
+        }
+        @nest & .total {
+          text-align: right;
+        }
+      }
+      @nest & .invoiceTotals {
+        color: #191919;
+        font-weight: bold;
+        display: grid;
+        align-items: center;
+        justify-content: flex-end;
+        text-align: right;
+        padding: 30px 0;
+        border-top: 3px solid #874da2;
+        margin-top: 100px;
+        width: 50%;
+        float: right;
+        @nest & > div {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          width: 200px;
+        }
+      }
+    }
+  }
+  @nest & .businessInfo {
+    text-align: left;
+    color: #191919;
+    @nest & p {
+      line-height: 1.15;
+      margin: 3px 0;
+    }
+  }
+}
+.invoiceTemplateContent {
+  padding-right: 0;
+  padding-left: 0;
+  display: flex;
+  height: 100%;
+}
+.invoiceTemplatePopup {
+  height: 1055px;
+  background: #262329 !important;
+  justify-content: flex-start;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  /* border: 16px solid #191919; */
+}
+.invoiceWrapper {
+  padding: 0 !important;
+}
+
+@media screen and (min-width: 768px) {
+  .hideMobile {
+    display: block;
+  }
+  .tableRow,
+  .tableHeader {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+@media print {
+  .confirmButton {
+    display: none !important;
+  }
+}

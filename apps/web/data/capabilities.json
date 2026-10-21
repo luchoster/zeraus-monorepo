@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Websites & web apps",
+    "num": "/ 01",
+    "hoverImage": "/img/illustrations/600x730_cpb-01.webp",
+    "mainImage": "/img/illustrations/1200x800_cpb-01.webp"
+  },
+  {
+    "title": "Integrations & automation",
+    "num": "/ 02",
+    "hoverImage": "/img/illustrations/600x730_cpb-03.webp",
+    "mainImage": "/img/illustrations/1200x800_cpb-03.webp"
+  },
+  {
+    "title": "Headless CMS & content platforms",
+    "num": "/ 03",
+    "hoverImage": "/img/illustrations/600x730_cpb-02.webp",
+    "mainImage": "/img/illustrations/1200x800_cpb-02.webp"
+  },
+  {
+    "title": "E-commerce & payments",
+    "num": "/ 04",
+    "hoverImage": "/img/illustrations/600x730_cpb-04.webp",
+    "mainImage": "/img/illustrations/1200x800_cpb-04.webp"
+  },
+  {
+    "title": "AI-powered products",
+    "num": "/ 05",
+    "hoverImage": "/img/illustrations/600x730_cpb-06.webp",
+    "mainImage": "/img/illustrations/1200x800_cpb-06.webp"
+  },
+  {
+    "title": "Brand, UI & motion",
+    "num": "/ 06",
+    "hoverImage": "/img/illustrations/600x730_cpb-05.webp",
+    "mainImage": "/img/illustrations/1200x800_cpb-05.webp"
+  }
+]

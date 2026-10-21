@@ -1,0 +1,122 @@
+/* ------------------------------------------------
+ * zera.us brand layer on top of the Rayo theme.
+ * Loaded AFTER /css/styles.css so these tokens win.
+ *
+ * Rayo exposes every color as a pair of custom props
+ * (--token--dark / --token--light) and swaps them with
+ * the html[color-scheme] attribute, so we only redefine
+ * the pairs + fonts here and leave the layout CSS alone.
+ * ------------------------------------------------ */
+
+/* Fonts (self-hosted, carried over from zera.us v2) */
+@font-face {
+  font-family: "Jaapokki";
+  src: url("../fonts/zeraus/jaapokki-regular.woff") format("woff");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Jaapokki Subtract";
+  src: url("../fonts/zeraus/jaapokkisubtract.woff") format("woff");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Jaapokki Enhance";
+  src: url("../fonts/zeraus/jaapokkienchance-enhanced.woff") format("woff");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("../fonts/zeraus/proximanova-reg-webfont.woff2") format("woff2"),
+    url("../fonts/zeraus/proximanova-reg-webfont.woff") format("woff");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("../fonts/zeraus/proxima-nova-bold-5892051470515-webfont.woff2") format("woff2"),
+    url("../fonts/zeraus/proxima-nova-bold-5892051470515-webfont.woff") format("woff");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* typography */
+  --_font-accent: "Jaapokki Subtract", "Jaapokki", "Funnel Display", sans-serif;
+  --_font-default: "Proxima Nova", "Funnel Sans", sans-serif;
+
+  /* zera.us palette (from v2 _variables.scss) */
+  --zr-woodsmoke: #191919;
+  --zr-shark: #231f20;
+  --zr-cobalt: #324ba7;
+  --zr-light-blue: #0097d6;
+  --zr-logo-blue: #0095da;
+  --zr-off-white: #f5f8fa;
+  --zr-light-gray: #e6e6e6;
+
+  /* DARK scheme — the brand default */
+  --base--dark: var(--zr-woodsmoke);
+  --base-tint--dark: var(--zr-shark);
+  --base-opp--dark: #ffffff;
+  --base-opp-tint--dark: var(--zr-off-white);
+  --accent--dark: var(--zr-light-blue);
+  --accent-rgb--dark: 0, 151, 214;
+  --additional--dark: var(--zr-cobalt);
+  --additional-rgb--dark: 50, 75, 167;
+
+  /* LIGHT scheme — inverted, keeps the blues */
+  --base--light: var(--zr-off-white);
+  --base-tint--light: #ffffff;
+  --base-opp--light: var(--zr-woodsmoke);
+  --base-opp-tint--light: var(--zr-shark);
+  --accent--light: var(--zr-cobalt);
+  --accent-rgb--light: 50, 75, 167;
+  --additional--light: var(--zr-light-blue);
+  --additional-rgb--light: 0, 151, 214;
+}
+
+/* Subtle film grain from zera.us v2 */
+html[color-scheme="dark"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: url("../img/brand/noise.png") repeat;
+  opacity: 0.06;
+}
+
+/* Hero headline: Rayo ships the brand name as an SVG; we render text instead */
+.hero-03-headline__title .zr-hero-wordmark {
+  display: block;
+  font-family: "Jaapokki Enhance", var(--_font-accent);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-size: clamp(5rem, 18vw, 22rem);
+  text-transform: uppercase;
+}
+.hero-03-headline__title .zr-hero-wordmark em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* Header / footer wordmark */
+.mxd-logo .zr-logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+html[color-scheme="light"] .mxd-logo .zr-logo-img {
+  filter: invert(1) hue-rotate(180deg);
+}
+.mxd-footer__fullwidth-text .zr-footer-wordmark {
+  font-family: "Jaapokki Enhance", var(--_font-accent);
+  font-size: clamp(4rem, 17vw, 20rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}

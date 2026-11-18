@@ -1,35 +1,18 @@
 import VelocityMarquee from "@/components/animation/VelocityMarquee";
-import Image from "next/image";
-import Link from "next/link";
 import { Metadata } from "next";
 import AnimatedButton from "@/components/animation/AnimatedButton";
+
 export const metadata: Metadata = {
-  title:
-    "Page Not Found || Rayo - Digital Agency & Personal Portfolio React Nextjs Template",
-  description:
-    "Rayo - Digital Agency & Personal Portfolio React Nextjs Template",
+  title: "Page not found | Zera Us",
+  description: "That page doesn’t exist.",
 };
+
 export default function NotFoundPage() {
   return (
     <>
-      {/* Floating Image Background Start */}
-      <div className="mxd-floating-img floating-bg">
-        <div className="mxd-floating-img__item mxd-move">
-          <Image
-            alt="Image"
-            src="/img/backgrounds/900x900_err-01.webp"
-            width={900}
-            height={900}
-          />
-        </div>
-      </div>
-      {/* Floating Image Background End */}
-      {/* Page Content Start */}
       <main id="mxd-page-content" className="mxd-page-content">
-        {/* Section - 404 Error Start */}
         <div className="mxd-section mxd-section-fullscreen">
           <div className="mxd-container grid-container fullwidth-container fullscreen-container loading-wrap">
-            {/* Block - 404 Error Content Start */}
             <div className="mxd-block fullscreen-block">
               <div className="mxd-error floating-cards">
                 <div className="mxd-error__descr">
@@ -55,7 +38,7 @@ export default function NotFoundPage() {
                         <AnimatedButton
                           className="btn btn-anim btn-default btn-accent slide-right-up"
                           text="Let's Go Home"
-                          href="/index-main"
+                          href="/"
                         >
                           <i className="ph-bold ph-arrow-up-right" />
                         </AnimatedButton>
@@ -65,12 +48,9 @@ export default function NotFoundPage() {
                 </div>
               </div>
             </div>
-            {/* Block - 404 Error Content End */}
-            {/* Block - 404 Error Marquee Start */}
             <div className="mxd-block absolute-centered-block loading__item">
               <VelocityMarquee className="marquee marquee-error marquee-right--gsap bright">
                 <div className="marquee__toright">
-                  {/* single item */}
                   {Array.from({ length: 3 }).map((_, index) => (
                     <div
                       key={index}
@@ -102,12 +82,9 @@ export default function NotFoundPage() {
                 </div>
               </VelocityMarquee>
             </div>
-            {/* Block - 404 Error Marquee End */}
           </div>
         </div>
-        {/* Section - 404 Error End */}
       </main>
-      {/* Page Content End */}
     </>
   );
 }

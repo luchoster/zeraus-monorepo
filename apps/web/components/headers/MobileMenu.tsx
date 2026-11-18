@@ -91,11 +91,10 @@ export default function MobileMenu({
     });
   }, [isMenuOpen]);
 
-  const promoCaption =
-    menuPromo?.caption ||
-    "Have a project in mind?\nWebsites, software, integrations & brands — built in Las Vegas.";
-  const promoVideo = menuPromo?.video || "/video/540x310_video-01.mp4";
-  const promoPoster = menuPromo?.poster || "/video/540x310_video-01.webp";
+  const promoCaption = menuPromo?.caption?.trim() || null;
+  const promoVideo = menuPromo?.video || null;
+  const promoPoster = menuPromo?.poster || null;
+  const hasPromoMedia = Boolean(promoVideo);
   const year = new Date().getFullYear();
   const rights = copyright?.trim() || `${wordmark || "ZERAUS"}. All rights reserved.`;
 
@@ -124,14 +123,14 @@ export default function MobileMenu({
         <div className="mxd-menu__contain" ref={menuContainRef}>
           <div className="mxd-menu__inner">
             <div className="mxd-menu__left">
-              <p
-                className="mxd-menu__caption fade-in-elm"
-                style={{ transitionDelay: "0.4s" }}
-              >
-                Innovative design
-                <br />
-                and cutting-edge development
-              </p>
+              {promoCaption ? (
+                <p
+                  className="mxd-menu__caption fade-in-elm"
+                  style={{ transitionDelay: "0.4s", whiteSpace: "pre-line" }}
+                >
+                  {promoCaption}
+                </p>
+              ) : null}
               <div className="main-menu">
                 <nav className="main-menu__content">
                   <ul id="main-menu" className="main-menu__accordion">
@@ -205,34 +204,40 @@ export default function MobileMenu({
                 </nav>
               </div>
             </div>
-            <div className="mxd-menu__right">
-              <div className="menu-promo">
-                <div className="menu-promo__content">
-                  <p
-                    className="menu-promo__caption fade-in-elm"
-                    style={{ transitionDelay: "0.4s", whiteSpace: "pre-line" }}
-                  >
-                    {promoCaption}
-                  </p>
-                  <div
-                    className="menu-promo__video fade-in-up-elm"
-                    style={{ transitionDelay: "0.3s" }}
-                  >
-                    <video
-                      className="menu-video"
-                      id="inner-video"
-                      preload="auto"
-                      autoPlay
-                      loop
-                      muted
-                      poster={promoPoster}
-                    >
-                      <source type="video/mp4" src={promoVideo} />
-                    </video>
+            {(promoCaption || hasPromoMedia) && (
+              <div className="mxd-menu__right">
+                <div className="menu-promo">
+                  <div className="menu-promo__content">
+                    {promoCaption && (
+                      <p
+                        className="menu-promo__caption fade-in-elm"
+                        style={{ transitionDelay: "0.4s", whiteSpace: "pre-line" }}
+                      >
+                        {promoCaption}
+                      </p>
+                    )}
+                    {hasPromoMedia && promoVideo && (
+                      <div
+                        className="menu-promo__video fade-in-up-elm"
+                        style={{ transitionDelay: "0.3s" }}
+                      >
+                        <video
+                          className="menu-video"
+                          id="inner-video"
+                          preload="auto"
+                          autoPlay
+                          loop
+                          muted
+                          poster={promoPoster ?? undefined}
+                        >
+                          <source type="video/mp4" src={promoVideo} />
+                        </video>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-            </div>
+            )}
             <div
               className="mxd-menu__data fade-in-up-elm"
               style={{ transitionDelay: "0.4s" }}

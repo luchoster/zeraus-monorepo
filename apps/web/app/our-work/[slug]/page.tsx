@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import AnimatedButton from "@/components/animation/AnimatedButton";
+import { HeadlineTitle } from "@/components/sections/inner-hero/shared";
 import { RichText, SimpleText } from "@/components/sections/Text";
 import { imageProps, urlFor } from "@/sanity/image";
 import { sanityFetch } from "@/sanity/live";
@@ -58,46 +59,121 @@ export default async function CaseStudyDetailPage({
   if (!data) notFound();
 
   const hero = imageProps(data.heroImage ?? data.previewImage, 1600);
-  const meta = [data.client, data.year].filter(Boolean).join(" · ");
+  const serviceNames = (data.services ?? [])
+    .map((s: { shortTitle?: string | null; title?: string | null } | null) => s?.shortTitle || s?.title)
+    .filter((v: string | null | undefined): v is string => Boolean(v));
+  const servicesLabel = serviceNames.join(", ");
+  const industriesLabel = (data.industries ?? []).filter(Boolean).join(", ");
+  const dateLabel = data.year ? String(data.year) : null;
+  const tags = (data.tags ?? []).filter(Boolean);
+  const hasMeta = Boolean(data.client || servicesLabel || industriesLabel || dateLabel);
 
   return (
     <main id="mxd-page-content" className="mxd-page-content">
+      <div className="mxd-section mxd-section-inner-headline padding-default">
+        <div className="mxd-container grid-container">
+          <div className="mxd-block loading-wrap">
+            <div className="container-fluid px-0">
+              <div className="row gx-0">
+                <div className="col-12 col-xl-2 mxd-grid-item no-margin">
+                  {data.url ? (
+                    <div className="mxd-block__name name-project-link loading__fade">
+                      <AnimatedButton
+                        text="Project Page"
+                        as={"a"}
+                        className="btn btn-anim btn-line-small btn-muted slide-right-up"
+                        href={data.url}
+                      >
+                        <i className="ph ph-arrow-up-right" />
+                      </AnimatedButton>
+                    </div>
+                  ) : null}
+                </div>
+                <div className="col-12 col-xl-10 mxd-grid-item no-margin">
+                  <div className="mxd-block__content">
+                    <div className="mxd-block__inner-headline loading__item">
+                      <HeadlineTitle title={data.title} />
+                      {data.tagline && (
+                        <p className="inner-headline__text t-large t-bright" style={{ marginTop: 12 }}>
+                          {data.tagline}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-12" />
+              </div>
+              <div className="row g-0">
+                <div className="col-12 col-xl-2" />
+                <div className="col-12 col-xl-6 mxd-grid-item no-margin">
+                  <div className="inner-headline__paragraph loading__item">
+                    <SimpleText value={data.excerpt} />
+                  </div>
+                  {hasMeta && (
+                    <div className="inner-headline__data">
+                      <div className="mxd-data-list">
+                        <div className="container-fluid p-0">
+                          <div className="row g-0">
+                            <div className="col-12 col-md-6 col-xl-5 mxd-data-list__column loading__item">
+                              {data.client && (
+                                <div className="mxd-data-list__item">
+                                  <p className="mxd-data-list__name">Client</p>
+                                  <p className="mxd-data-list__content">{data.client}</p>
+                                </div>
+                              )}
+                              {servicesLabel && (
+                                <div className="mxd-data-list__item">
+                                  <p className="mxd-data-list__name">Services</p>
+                                  <p className="mxd-data-list__content">{servicesLabel}</p>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-12 col-md-6 col-xl-5 mxd-data-list__column loading__item">
+                              {industriesLabel && (
+                                <div className="mxd-data-list__item">
+                                  <p className="mxd-data-list__name">Industries</p>
+                                  <p className="mxd-data-list__content">{industriesLabel}</p>
+                                </div>
+                              )}
+                              {dateLabel && (
+                                <div className="mxd-data-list__item">
+                                  <p className="mxd-data-list__name">Date</p>
+                                  <p className="mxd-data-list__content">{dateLabel}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {tags.length > 0 && (
+                  <div className="col-12 col-xl-4 mxd-grid-item no-margin">
+                    <div className="inner-headline__tags loading__fade">
+                      {tags.map((t: string) => (
+                        <span key={t} className="tag tag-default tag-outline-medium">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="mxd-section padding-default">
         <div className="mxd-container grid-container">
           <div className="mxd-block">
             <div className="container-fluid px-0">
               <div className="row gx-0">
-                <div className="col-12 col-xl-5 mxd-grid-item no-margin">
-                  <div className="mxd-block__name">
-                    <h1 className="reveal-type anim-uni-in-up">{data.title}</h1>
-                    {data.tagline && (
-                      <p className="t-large t-bright anim-uni-in-up" style={{ marginTop: 12 }}>
-                        {data.tagline}
-                      </p>
-                    )}
-                    {meta && (
-                      <p className="t-small t-muted anim-uni-in-up" style={{ marginTop: 8 }}>
-                        {meta}
-                      </p>
-                    )}
-                    {data.tags && data.tags.length > 0 && (
-                      <p className="t-small t-muted anim-uni-in-up" style={{ marginTop: 8 }}>
-                        {data.tags.join(" · ")}
-                      </p>
-                    )}
-                    {data.url && (
-                      <p className="anim-uni-in-up" style={{ marginTop: 16 }}>
-                        <Link href={data.url} target="_blank" rel="noopener noreferrer">
-                          Visit live site →
-                        </Link>
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="col-12 col-xl-6 mxd-grid-item no-margin">
+                <div className="col-12 col-xl-2 mxd-grid-item no-margin" />
+                <div className="col-12 col-xl-8 mxd-grid-item no-margin">
                   <div className="mxd-block__content">
                     <div className="mxd-block__paragraph mxd-article">
-                      <SimpleText value={data.excerpt} className="t-large t-bright anim-uni-in-up" />
                       {data.challenge && (
                         <>
                           <h2 className="anim-uni-in-up">Challenge</h2>
@@ -118,7 +194,7 @@ export default async function CaseStudyDetailPage({
                       )}
                       {data.testimonial?.quote && (
                         <blockquote className="anim-uni-in-up" style={{ marginTop: 32 }}>
-                          <p>{data.testimonial.quote}</p>
+                          <SimpleText value={data.testimonial.quote} />
                           {(data.testimonial.author || data.testimonial.company) && (
                             <footer>
                               {[data.testimonial.author, data.testimonial.role, data.testimonial.company]

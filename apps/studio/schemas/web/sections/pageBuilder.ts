@@ -6,6 +6,7 @@ import { defineArrayMember, defineType } from 'sanity'
  */
 export const SECTION_TYPES = [
   'heroSection',
+  'innerHeroSection',
   'marqueeSection',
   'servicesSection',
   'aboutSection',

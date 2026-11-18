@@ -54,6 +54,14 @@ const SECTIONS = /* groq */ `sections[]{
       null
     )
   },
+  _type == "innerHeroSection" => {
+    variant, eyebrow, title, text, titleDecoration, typedLines, mailtoLabel, mailtoEmail,
+    tags, breadcrumbs[]{ _key, label, href },
+    showDivider, dividerImage ${IMAGE},
+    rotatingCtaText, rotatingCtaLink ${LINK}, rotatingCtaImage ${IMAGE},
+    valuesLeft, valuesRight, imageLeft ${IMAGE}, imageRight ${IMAGE}, description,
+    projectLinkLabel, projectUrl, client, servicesLabel, industries, date, paddingClass
+  },
   _type == "marqueeSection" => { items, direction, muted },
   _type == "servicesSection" => {
     heading,

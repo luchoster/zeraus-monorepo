@@ -47,6 +47,11 @@ const SHOTS = {
 
 /** Blocks with no Rayo equivalent get a rendered placeholder. */
 const PLACEHOLDERS = {
+  innerHeroSection: `
+    <div style="padding:48px 64px">
+      <p style="opacity:.6;margin:0 0 12px;font-size:14px">✦ Services</p>
+      <h1 style="margin:0;font-size:64px;letter-spacing:-.03em;max-width:18ch">New standards in digital excellence</h1>
+    </div>`,
   creditsSection: `
     <h2>Credits</h2>
     <ul>

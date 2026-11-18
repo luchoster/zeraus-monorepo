@@ -1,4 +1,5 @@
 export { heroSection, heroMedia } from './heroSection'
+export { innerHeroSection } from './innerHeroSection'
 export { marqueeSection } from './marqueeSection'
 export { servicesSection, serviceCard } from './servicesSection'
 export { aboutSection } from './aboutSection'

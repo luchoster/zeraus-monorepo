@@ -1,5 +1,6 @@
 import type { PageSettings, Section } from "./types";
 import HeroSection from "./HeroSection";
+import InnerHeroSection from "./InnerHeroSection";
 import MarqueeSection from "./MarqueeSection";
 import ServicesSection from "./ServicesSection";
 import AboutSection from "./AboutSection";
@@ -26,6 +27,8 @@ export function SectionRenderer({ sections, settings }: { sections?: Section[] |
         switch (section._type) {
           case "heroSection":
             return <HeroSection key={section._key} section={section} settings={settings} />;
+          case "innerHeroSection":
+            return <InnerHeroSection key={section._key} section={section} />;
           case "marqueeSection":
             return <MarqueeSection key={section._key} section={section} />;
           case "servicesSection":

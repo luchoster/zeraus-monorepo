@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Eyebrow, HeadlineTitle } from "@/components/sections/inner-hero/shared";
 import { RichText, SimpleText } from "@/components/sections/Text";
 import { imageProps, urlFor } from "@/sanity/image";
 import { sanityFetch } from "@/sanity/live";
@@ -57,25 +58,47 @@ export default async function ServiceDetailPage({
   if (!data) notFound();
 
   const hero = imageProps(data.illustration ?? data.cardImage, 1400);
+  const eyebrow = data.shortTitle || data.tags?.[0] || "Service";
 
   return (
     <main id="mxd-page-content" className="mxd-page-content">
+      <div className="mxd-section mxd-section-inner-headline padding-s-headline-pre-grid">
+        <div className="mxd-container grid-container">
+          <div className="mxd-block loading-wrap">
+            <div className="container-fluid px-0">
+              <div className="row gx-0">
+                <div className="col-12 col-xl-2 mxd-grid-item no-margin">
+                  <Eyebrow label={eyebrow} />
+                </div>
+                <div className="col-12 col-xl-10 mxd-grid-item no-margin">
+                  <div className="mxd-block__content">
+                    <div className="mxd-block__inner-headline">
+                      <HeadlineTitle title={data.title} className="loading__item" />
+                      {data.tags && data.tags.length > 0 && (
+                        <div className="inner-headline__tags loading__fade" style={{ marginTop: 16 }}>
+                          {data.tags.map((t: string) => (
+                            <span key={t} className="tag tag-default tag-outline-medium">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="mxd-section padding-default">
         <div className="mxd-container grid-container">
           <div className="mxd-block">
             <div className="container-fluid px-0">
               <div className="row gx-0">
-                <div className="col-12 col-xl-5 mxd-grid-item no-margin">
-                  <div className="mxd-block__name">
-                    <h1 className="reveal-type anim-uni-in-up">{data.title}</h1>
-                    {data.tags && data.tags.length > 0 && (
-                      <p className="t-small t-muted anim-uni-in-up" style={{ marginTop: 12 }}>
-                        {data.tags.join(" · ")}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="col-12 col-xl-6 mxd-grid-item no-margin">
+                <div className="col-12 col-xl-2 mxd-grid-item no-margin" />
+                <div className="col-12 col-xl-8 mxd-grid-item no-margin">
                   <div className="mxd-block__content">
                     <div className="mxd-block__paragraph mxd-article">
                       <SimpleText value={data.excerpt} className="t-large t-bright anim-uni-in-up" />

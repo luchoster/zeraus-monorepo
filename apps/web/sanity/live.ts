@@ -1,4 +1,5 @@
 import { defineLive } from "next-sanity/live";
+import type { QueryParams } from "next-sanity";
 import { client } from "./client";
 
 const token = process.env.SANITY_API_READ_TOKEN;
@@ -18,9 +19,29 @@ if (!token && process.env.NODE_ENV === "development") {
  * uses the client's own token for published content, so the token goes on the
  * client itself (this module only runs on the server). `browserToken` is sent
  * to the browser only while draft mode (Presentation) is on.
+ *
+ * Draft perspective: the site is not live yet and website docs are drafts.
+ * When SANITY_API_READ_TOKEN is present, default every fetch to
+ * `previewDrafts` (published + drafts) so unpublished pages/nav render.
+ * Without a token, keep the library default (published / draft-mode cookie).
  */
-export const { sanityFetch, SanityLive } = defineLive({
+const live = defineLive({
   client: token ? client.withConfig({ token }) : client,
   serverToken: token,
   browserToken: token,
 });
+
+export const SanityLive = live.SanityLive;
+
+type SanityFetch = typeof live.sanityFetch;
+
+export const sanityFetch: SanityFetch = ((options) => {
+  const perspective =
+    options.perspective ?? (token ? ("previewDrafts" as const) : undefined);
+  return live.sanityFetch(
+    perspective ? { ...options, perspective } : options,
+  );
+}) as SanityFetch;
+
+// Re-export for callers that need the raw QueryParams type.
+export type { QueryParams };

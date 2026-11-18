@@ -1,6 +1,6 @@
 import "../public/css/styles.css";
 import "../public/css/zeraus.css";
-import ClientLayout from "@/components/layout/ClientLayout";
+import SiteChrome from "@/components/layout/SiteChrome";
 import SiteFooter from "@/components/footers/SiteFooter";
 import { SanityLive } from "@/sanity/live";
 import type { Metadata, Viewport } from "next";
@@ -60,10 +60,10 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: setColorSchemeScript }} />
       </head>
       <body>
-        <ClientLayout>
+        <SiteChrome>
           {children}
           <SiteFooter />
-        </ClientLayout>
+        </SiteChrome>
         <SanityLive />
       </body>
     </html>

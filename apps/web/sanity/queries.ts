@@ -155,3 +155,23 @@ export const HERO_GALLERY_QUERY = defineQuery(/* groq */ `{
   },
   "settings": *[_id == "siteSettings"][0]{ wordmark, title, headerCta ${LINK}, socialLinks[]{ _key, platform, label, url } }
 }`);
+
+export const SERVICE_BY_SLUG_QUERY = defineQuery(/* groq */ `*[_type == "service" && slug.current == $slug][0]{
+  _id, _type, title, shortTitle, excerpt, body, tags, "slug": slug.current,
+  illustration ${IMAGE}, cardImage ${IMAGE}, hoverImage ${IMAGE}, icon ${IMAGE},
+  ${SEO}
+}`);
+
+export const SERVICE_SLUGS_QUERY = defineQuery(/* groq */ `*[_type == "service" && defined(slug.current)]{ "slug": slug.current }`);
+
+export const CASE_STUDY_BY_SLUG_QUERY = defineQuery(/* groq */ `*[_type == "caseStudy" && slug.current == $slug][0]{
+  _id, _type, title, tagline, excerpt, challenge, solution, results,
+  client, year, url, tags, industries, "slug": slug.current,
+  previewImage ${IMAGE}, heroImage ${IMAGE}, gallery[] ${IMAGE},
+  clientLogo ${IMAGE},
+  services[]->{ _id, title, shortTitle, "slug": slug.current },
+  testimonial->{ _id, quote, author, role, company, avatar ${IMAGE} },
+  ${SEO}
+}`);
+
+export const CASE_STUDY_SLUGS_QUERY = defineQuery(/* groq */ `*[_type == "caseStudy" && defined(slug.current)]{ "slug": slug.current }`);

@@ -5,7 +5,13 @@ import { useEffect, useState } from "react";
 import AnimatedButton from "../animation/AnimatedButton";
 import ThemeSwitcherButton from "./ColorSwitcher";
 
-export default function Header1() {
+export type HeaderCta = {
+  label: string;
+  href: string;
+  target?: string;
+} | null;
+
+export default function Header1({ headerCta = null }: { headerCta?: HeaderCta }) {
   const [isHidden, setIsHidden] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +22,10 @@ export default function Header1() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const ctaLabel = headerCta?.label || "Book a Call";
+  const ctaHref = headerCta?.href || "/book-a-call";
+  const ctaTarget = headerCta?.target;
 
   return (
     <header id="header" className={`mxd-header ${isHidden ? "is-hidden" : ""}`}>
@@ -37,9 +47,10 @@ export default function Header1() {
         <ThemeSwitcherButton />
 
         <AnimatedButton
-          text="Book a Call"
+          text={ctaLabel}
           className="btn btn-anim btn-default btn-mobile-icon btn-outline slide-right"
-          href="/book-a-call"
+          href={ctaHref}
+          target={ctaTarget}
         >
           <i className="ph-bold ph-arrow-up-right" />
         </AnimatedButton>

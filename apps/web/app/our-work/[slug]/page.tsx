@@ -61,7 +61,7 @@ export default async function CaseStudyDetailPage({
   const meta = [data.client, data.year].filter(Boolean).join(" · ");
 
   return (
-    <main id="mxd-page-content" className="mxd-page-content inner-page-content">
+    <main id="mxd-page-content" className="mxd-page-content">
       <div className="mxd-section padding-default">
         <div className="mxd-container grid-container">
           <div className="mxd-block">

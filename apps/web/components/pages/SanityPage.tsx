@@ -46,7 +46,7 @@ export async function SanityPage({
   }
 
   return (
-    <main id="mxd-page-content" className="mxd-page-content inner-page-content">
+    <main id="mxd-page-content" className="mxd-page-content">
       <SectionRenderer sections={data.sections} settings={data.settings ?? null} />
       {process.env.NODE_ENV === "development" &&
         (!data.sections || data.sections.length === 0) && (

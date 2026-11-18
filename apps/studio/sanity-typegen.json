@@ -1,5 +1,10 @@
 {
-  "path": "../web/**/*.{ts,tsx,js,jsx}",
+  "path": [
+    "../web/app/**/*.{ts,tsx}",
+    "../web/components/**/*.{ts,tsx}",
+    "../web/sanity/**/*.{ts,tsx}",
+    "../web/lib/**/*.{ts,tsx}"
+  ],
   "schema": "./schema.json",
   "generates": "../web/sanity/types.generated.ts",
   "overloadClientMethods": true

@@ -25,6 +25,7 @@ pnpm dev:web | pnpm dev:studio
 pnpm build          # turbo: builds both
 pnpm typegen        # extracts the studio schema → apps/web/sanity/types.generated.ts
 pnpm --filter @zeraus/studio deploy
+pnpm --filter @zeraus/web block-previews   # regenerate page-builder thumbnails (needs dev:web running)
 ```
 
 ## Brand

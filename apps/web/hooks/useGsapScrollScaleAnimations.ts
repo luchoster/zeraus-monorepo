@@ -219,9 +219,11 @@ export default function useGsapScrollScaleAnimations() {
       });
 
       // ✅ Loading animation
+      // Every `.loading-wrap` on the page (a page normally has one hero, the
+      // /hero-gallery route has nine), not just the first one.
       const loadingWrap = document.querySelector(".loading-wrap");
       if (loadingWrap) {
-        const loadingItems = loadingWrap.querySelectorAll(".loading__item");
+        const loadingItems = document.querySelectorAll(".loading-wrap .loading__item");
         const fadeInItems = document.querySelectorAll(".loading__fade");
 
         const pageAppearance = () => {

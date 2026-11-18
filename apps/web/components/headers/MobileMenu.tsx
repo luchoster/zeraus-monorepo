@@ -257,19 +257,10 @@ export default function MobileMenu() {
               className="mxd-menu__data fade-in-up-elm"
               style={{ transitionDelay: "0.4s" }}
             >
-              <p className="t-xsmall">
-                Made with <i className="ph-fill ph-heart t-additional" /> by{" "}
-                <a
-                  className="no-effect"
-                  href="https://themeforest.net/user/ib-themes/portfolio"
-                  target="_blank"
-                >
-                  ib themes
-                </a>
-              </p>
+              <p className="t-xsmall">{new Date().getFullYear()} </p>
               <p className="t-xsmall">
                 <i className="ph ph-copyright" />
-                2025
+                ZERAUS. All rights reserved.
               </p>
             </div>
           </div>

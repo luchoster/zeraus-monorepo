@@ -13,6 +13,7 @@ Status legend: ✅ done in this repo · 🔜 next · 🧭 later
 3. **Old types stay registered (hidden) until migration is verified**, then are removed in one commit together with the migration cleanup.
 4. Everything new is written with `defineType`/`defineField`/`defineArrayMember` in TypeScript, under `apps/studio/schemas/web/`, and typed in the frontend via `sanity typegen` → `apps/web/sanity/types.generated.ts` (config already in `apps/studio/sanity-typegen.json`).
 5. All new fields are `camelCase`; old `snake_case` fields are mapped in the migration, not kept.
+6. **Long copy is Portable Text.** Anything that is not a heading/subheading and can hold more than one sentence is `simplePortableText` (paragraphs + bold/italic/links) or `portableText` (full rich text). Plain `string`/`text` is only for headings, short labels, captions with deliberate line breaks (hero caption, stat labels) and meta descriptions.
 
 ---
 
@@ -144,6 +145,7 @@ Run as `sanity migration` scripts in `apps/studio/migrations/` against a **copy*
 | 8 | `homePage.contact_section` | `ctaSection` | `title→caption`, `subtitle` dropped (CTA label from settings) |
 | 9 | `page` (`our-work`, `book-a-call`) | `page` | `pageTitle→title`; `content[]` → `richTextSection`/`creditsSection`; `our-work` gets a `caseStudiesSection` with no refs (= all); `book-a-call` gets `formSection{form: bookCall}` |
 | 10 | `post` | `post` | `mainImage→coverImage`; add empty `excerpt` |
+| 10b | `homePage.seo`, `page[].seo` (`pageSeo`) | `seo` object | `description→metaDescription`, `keywords→keywords`, `seo_image→ogImage`, drop `author`; set `_type: 'seo'` (until this runs the Studio flags the old value as a type mismatch on that one field) |
 | 11 | — | `techStack` seed | seed from the 9 Rayo cards re-pointed to our stack: Next.js, React, TypeScript, Sanity, Node, Vercel, Shopify, Supabase/Postgres, iOS/Android |
 | 12 | — | `homePage.sections[]` | assemble in Rayo order (§1) using refs created in 3–5 |
 
@@ -209,7 +211,55 @@ Also:
 | phase | scope | done when |
 |---|---|---|
 | **0 ✅** | Monorepo, Rayo port, brand tokens, shared Sanity config, typegen config | `pnpm build` green |
-| **1 🔜** | New schemas in `schemas/web/` (TS), structure regroup, old types hidden; typegen | Studio boots, `sanity schema extract` passes |
+| **1 ✅** | New schemas in `schemas/web/` (TS), structure regroup, old types hidden; typegen | Studio boots, `sanity schema extract` passes — done 2026-10-21, see §8 |
 | **2 🔜** | Migration scripts on a `staging` dataset; home + our-work + services wired to Sanity | Home renders 100% from CMS on staging |
 | **3 🧭** | Forms + payments API routes, Presentation/visual editing, remaining pages, insights | Feature parity with zera.us v2 + new pages |
 | **4 🧭** | Run migration on `zeraus`, flip DNS/Vercel, delete old types + demo routes, rotate tokens | v3 live |
+
+---
+
+## 8. Phase 1 — as built (2026-10-21)
+
+Everything lives in `apps/studio/schemas/web/`:
+
+```
+web/
+├─ shared/     imageWithAlt, link, seo, socialLink, navItem, youtube, urlEmbed, codeBlock,
+│              portableText + simplePortableText, sectionFields (anchor/theme fieldset)
+├─ sections/   the 17 page-builder objects from §2.3 + pageBuilder (the `sections[]` array)
+├─ documents/  siteSettings, navigation, homePage, page, service, caseStudy, partner,
+│              techStack, testimonial, teamMember, post, category, faq
+└─ legacy.ts   legacyField() helper, SINGLETON_TYPES, LEGACY_WEB_TYPES
+```
+
+Deviations from §2 worth knowing when writing queries / the migration:
+
+| plan | built | why |
+|---|---|---|
+| `aboutSection.paragraph` (text) | `aboutSection.body` (`simplePortableText`) | rule 0.6 |
+| `caseStudiesSection.description`, `latestPostsSection.description`, `faqSection.intro`, `formSection.intro` (text) | `simplePortableText` | rule 0.6 |
+| `service.excerpt`, `post.excerpt`, `testimonial.quote`, `category.description` (text) | `simplePortableText` | rule 0.6 |
+| `servicesSection.services[]` + `layout[]` | `servicesSection.cards[]{service→, size: normal/wide, theme: tint/accent/additional/opposite}` (`serviceCard`) | one array instead of two parallel ones |
+| `heroSection.media[]{kind,file/image,animation}` | `heroMedia{kind, image, video, poster, animation}` | explicit poster for video items |
+| `heroSection` = Rayo hero 03 only | `heroSection.variant` selects any of the **nine Rayo heroes** (software, agency, pinned, studio, webAgency, freelancer, creativeDeveloper, designer, personal); fields show/hide per layout; `/hero-gallery` (noindex) renders all nine with the home hero's content for comparison | the client wanted to choose |
+| `serviceCard{service,size,theme}` | + `imagePosition`, `imageAnimation` (defaults follow Rayo's five cards) | match the template's bento |
+| `ctaSection` | + `backgroundImage` (the right-hand panel background) | was a CSS placeholder |
+| `statsSection.stats[]{…}` | `stat` object (named, so typegen exports it) | — |
+| `sectionBase.anchor` (slug) | `anchor` (string, `^[a-z0-9-]+$`) | no slug source needed; simpler in the frontend |
+| `caseStudy` | + `excerpt`, `industries[]` (Rayo project-details shows Industries) | — |
+| `siteSettings` | + `copyright`, `newsletter.successMessage/errorMessage` | footer copy |
+| `formSection` | + `successMessage` | — |
+| `faq` | + `order` | — |
+| `post.author` → `teamMember` | as planned; old `mainImage` kept as legacy field | — |
+| `code` block | `codeBlock{language, filename, code}` (plain object, no `@sanity/code-input`) | no extra dependency; swap later if wanted |
+
+Transition mechanics:
+
+- Reshaped documents (`homePage`, `page`, `siteSettings`, `post`) keep their v2 fields under a **Legacy (v2)** group: read-only, `deprecated`, hidden when empty. They disappear in phase 4 together with `LEGACY_WEB_TYPES`.
+- All other v2 website types are still registered (title suffixed "(legacy)", `deprecated`) and hidden from *Create new*; `schemas/index.ts` throws on duplicate type names.
+- Singletons (`siteSettings`, `navigation`, `homePage`) have fixed `_id`s via the structure and only publish/discard/restore actions.
+- Structure: **Website** / **Leads** / **Business** groups (§4). Non-admins now get Website + Leads (previously an empty desk). The role check also fixed the `tools` filter, which still referenced the v2 `desk` tool name.
+- Presentation tool is wired (`src/lib/presentation.ts` locations for homePage/page/caseStudy/service/post) but only mounts when `SANITY_STUDIO_PREVIEW_URL` is set, because the draft-mode route is phase 3.
+- The `sections[]` insert menu is a **tile grid** with a thumbnail per block (`apps/studio/static/block-previews/<type>.png`, served at `/static/…`). Thumbnails are real screenshots of the Rayo sections, regenerated with `pnpm --filter @zeraus/web block-previews` while `pnpm dev:web` is running (`apps/web/scripts/block-previews.mjs`, uses local Chrome via `playwright-core`). `creditsSection` has no Rayo block and gets a rendered placeholder.
+- `pnpm typegen` → `apps/web/sanity/types.generated.ts` (118 types, incl. `PageBuilder`, every `*Section`, `SimplePortableText`). Typegen now only scans `apps/web/{app,components,sanity,lib}`.
+- Not done on purpose: no documents created, nothing deployed, dataset untouched. Phase 2 starts by exporting `zeraus` → `staging`.

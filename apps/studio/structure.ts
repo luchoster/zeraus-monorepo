@@ -1,180 +1,140 @@
-import * as R from "ramda";
+import type { CurrentUser } from 'sanity'
+import type { StructureBuilder, StructureResolver } from 'sanity/structure'
 import {
-  HiOutlineClipboard,
-  HiOutlineDocumentText,
-  HiOutlineHome,
-  HiOutlineEnvelopeOpen,
-  HiOutlineBars3,
-  HiOutlineCog8Tooth,
-  HiOutlineBriefcase,
-  HiOutlinePhone,
-  HiOutlinePencilSquare,
-  HiOutlineUsers,
-  HiOutlineEye,
-} from "react-icons/hi2";
-import { TbFileInvoice, TbReceipt2 } from "react-icons/tb";
-import Invoice from "./plugins/invoices/components/InvoicePreview";
+  CogIcon,
+  MenuIcon,
+  HomeIcon,
+  DocumentIcon,
+  WrenchIcon,
+  CaseIcon,
+  StarIcon,
+  CodeIcon,
+  CommentIcon,
+  UsersIcon,
+  DocumentTextIcon,
+  TagIcon,
+  HelpCircleIcon,
+  EnvelopeIcon,
+  UserIcon,
+  EditIcon,
+  EyeOpenIcon,
+  BillIcon,
+  ChartUpwardIcon,
+  FolderIcon,
+  RocketIcon,
+} from '@sanity/icons'
+import Invoice from './plugins/invoices/components/InvoicePreview'
 
-export const structure = (S: any, context: any) => {
-  const { currentUser } = context;
+/** administrator, or a custom role named "developer" */
+export function isAdminLike(user: Pick<CurrentUser, 'roles'> | null | undefined): boolean {
+  return Boolean(user?.roles?.some((r) => r.name === 'administrator' || r.name === 'developer'))
+}
 
-  const adminItems: any[] = [
-    S.listItem()
-      .title("Site Settings")
-      .icon(HiOutlineCog8Tooth)
-      .child(
-        S.editor()
-          .id("siteSettings")
-          .schemaType("siteSettings")
-          .documentId("siteSettings")
-      ),
+const singleton = (S: StructureBuilder, type: string, title: string, icon: React.ComponentType) =>
+  S.listItem()
+    .title(title)
+    .icon(icon)
+    .id(type)
+    .child(S.document().schemaType(type).documentId(type).title(title))
 
-    // main menu items
-    S.listItem()
-      .title("Main Menu")
-      .icon(HiOutlineBars3)
-      .child(
-        S.editor()
-          .title("Main Menu Items")
-          .id("main_menu")
-          .schemaType("main_menu")
-          .documentId("main_menu")
-      ),
+const typeList = (S: StructureBuilder, type: string, title: string, icon: React.ComponentType, ordering?: { field: string; direction: 'asc' | 'desc' }) => {
+  let list = S.documentTypeList(type).title(title)
+  if (ordering) list = list.defaultOrdering([ordering])
+  return S.listItem().title(title).icon(icon).id(type).child(list)
+}
 
-    S.divider(),
+export const structure: StructureResolver = (S, context) => {
+  const admin = isAdminLike(context.currentUser)
 
-    // home page
-    S.listItem()
-      .title("Home Page")
-      .icon(HiOutlineHome)
-      .child(
-        S.editor()
-          .title("Home Page Content")
-          .id("homePage")
-          .schemaType("homePage")
-          .documentId("homePage")
-      ),
+  const website = S.listItem()
+    .title('Website')
+    .icon(RocketIcon)
+    .id('website')
+    .child(
+      S.list()
+        .title('Website')
+        .items([
+          singleton(S, 'siteSettings', 'Site Settings', CogIcon),
+          singleton(S, 'navigation', 'Navigation', MenuIcon),
+          singleton(S, 'homePage', 'Home Page', HomeIcon),
+          S.divider(),
+          typeList(S, 'page', 'Pages', DocumentIcon, { field: 'title', direction: 'asc' }),
+          typeList(S, 'service', 'Services', WrenchIcon, { field: 'order', direction: 'asc' }),
+          typeList(S, 'caseStudy', 'Case Studies', CaseIcon, { field: 'order', direction: 'asc' }),
+          typeList(S, 'partner', 'Partners', StarIcon, { field: 'order', direction: 'asc' }),
+          typeList(S, 'techStack', 'Tech Stack', CodeIcon, { field: 'order', direction: 'asc' }),
+          typeList(S, 'testimonial', 'Testimonials', CommentIcon, { field: '_createdAt', direction: 'desc' }),
+          typeList(S, 'teamMember', 'Team', UsersIcon, { field: 'order', direction: 'asc' }),
+          S.divider(),
+          S.listItem()
+            .title('Insights')
+            .icon(DocumentTextIcon)
+            .id('insights')
+            .child(
+              S.list()
+                .title('Insights')
+                .items([
+                  typeList(S, 'post', 'Posts', DocumentTextIcon, { field: 'publishedAt', direction: 'desc' }),
+                  typeList(S, 'category', 'Categories', TagIcon, { field: 'title', direction: 'asc' }),
+                ]),
+            ),
+          typeList(S, 'faq', 'FAQs', HelpCircleIcon, { field: 'order', direction: 'asc' }),
+        ]),
+    )
 
-    // Generic Pages
-    S.listItem()
-      .title("Pages")
-      .icon(HiOutlineDocumentText)
-      .child(S.documentTypeList("page").title("Pages")),
+  const leads = S.listItem()
+    .title('Leads')
+    .icon(EnvelopeIcon)
+    .id('leads')
+    .child(
+      S.list()
+        .title('Leads')
+        .items([
+          typeList(S, 'bookCallForm', 'Book-a-Call Leads', UserIcon, { field: '_createdAt', direction: 'desc' }),
+          typeList(S, 'contactForm', 'Contact Form', EnvelopeIcon, { field: '_createdAt', direction: 'desc' }),
+        ]),
+    )
 
-    // Portfolio
-    S.listItem()
-      .title("Portfolio")
-      .icon(HiOutlineBriefcase)
-      .child(
-        S.editor()
-          .title("Portfolio Items")
-          .id("portfolio")
-          .schemaType("portfolio")
-          .documentId("portfolio")
-      ),
-
-    // Posts
-    S.listItem()
-      .title("Posts")
-      .icon(HiOutlineClipboard)
-      .child(S.documentTypeList("post").title("Posts")),
-
-    // Project
-    S.listItem()
-      .title("Client Projects")
-      .icon(HiOutlineUsers)
-      .child(S.documentTypeList("project").title("Client Projects")),
-
-    // Book Form Sumissions
-    S.listItem()
-      .title("Book Call Leads")
-      .icon(HiOutlinePhone)
-      .child(S.documentTypeList("bookCallForm").title("Book Call Leads")),
-
-    // Contact Form Sumissions
-    S.listItem()
-      .title("Contact Form")
-      .icon(HiOutlineEnvelopeOpen)
-      .child(S.documentTypeList("contactForm").title("Contact Form")),
-
-    S.divider(),
-
-    // Clients
-    S.listItem()
-      .title("Clients")
-      .icon(HiOutlineUsers)
-      .child(S.documentTypeList("clients").title("Clients")),
-
-    // Invoices
-    S.listItem()
-      .title("Invoices")
-      .icon(TbFileInvoice)
-      .child(
-        S.documentTypeList("invoices")
-          .title("Invoices")
-          .child(() =>
-            S.document()
-              .schemaType("invoices")
-              .views([
-                S.view.form().icon(HiOutlinePencilSquare),
-                S.view.component(Invoice).icon(HiOutlineEye).title("Preview"),
-              ])
-          )
-          .defaultOrdering([{ field: "invoice_number", direction: "desc" }])
-          .menuItems([
-            S.orderingMenuItem({
-              title: "Sort by date",
-              by: [{ field: "invoice_date", direction: "desc" }],
-            }),
-            S.orderingMenuItem({
-              title: "Sort by Invoice",
-              by: [{ field: "invoice_number", direction: "desc" }],
-            }),
-          ])
-      ),
-
-    S.listItem()
-      .title("Expenses")
-      .icon(TbReceipt2)
-      .child(
-        S.documentTypeList("expenses")
-          .title("Expenses")
-          .defaultOrdering([{ field: "date", direction: "desc" }])
-      ),
-
-    S.divider(),
-
-    S.listItem()
-      .title("Persons")
-      .schemaType("person")
-      .child(
-        S.documentList("person")
-          .title("Persons")
-          .filter("_type == $type")
-          .params({ type: "person" })
-      ),
-  ];
-
-  const defaultItems: any[] = [];
+  const business = S.listItem()
+    .title('Business')
+    .icon(FolderIcon)
+    .id('business')
+    .child(
+      S.list()
+        .title('Business')
+        .items([
+          typeList(S, 'clients', 'Clients', UsersIcon, { field: 'client_name', direction: 'asc' }),
+          S.listItem()
+            .title('Invoices')
+            .icon(BillIcon)
+            .id('invoices')
+            .child(
+              S.documentTypeList('invoices')
+                .title('Invoices')
+                .child((documentId) =>
+                  S.document()
+                    .documentId(documentId)
+                    .schemaType('invoices')
+                    .views([
+                      S.view.form().icon(EditIcon),
+                      S.view.component(Invoice).icon(EyeOpenIcon).title('Preview'),
+                    ]),
+                )
+                .defaultOrdering([{ field: 'invoice_number', direction: 'desc' }])
+                .menuItems([
+                  S.orderingMenuItem({ name: 'byDate', title: 'Sort by date', by: [{ field: 'invoice_date', direction: 'desc' }] }),
+                  S.orderingMenuItem({ name: 'byInvoice', title: 'Sort by Invoice', by: [{ field: 'invoice_number', direction: 'desc' }] }),
+                ]),
+            ),
+          typeList(S, 'expenses', 'Expenses', ChartUpwardIcon, { field: 'date', direction: 'desc' }),
+          typeList(S, 'expense_category', 'Expense Categories', TagIcon, { field: 'name', direction: 'asc' }),
+          S.divider(),
+          typeList(S, 'project', 'Client Projects', FolderIcon, { field: 'title', direction: 'asc' }),
+          typeList(S, 'person', 'Persons', UserIcon, { field: 'name', direction: 'asc' }),
+        ]),
+    )
 
   return S.list()
-    .title("Content")
-    .items(
-      // Display List Items based on role of current user
-      // if admin or custom with developer role
-      // display admin items
-      R.or(
-        R.equals(currentUser?.role, "administrator"),
-        R.and(
-          R.equals(currentUser?.role, "custom"),
-          R.compose(
-            R.propEq("name", "developer"),
-            R.head,
-            R.prop("roles")
-          )(currentUser)
-        )
-      )
-        ? [...adminItems]
-        : [...defaultItems]
-    );
-};
+    .title('Content')
+    .items(admin ? [website, leads, S.divider(), business] : [website, leads])
+}

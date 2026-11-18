@@ -1,50 +1,49 @@
-import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
-
-import About from "@/components/homes/home-software-development-company/About";
-import Capabilities from "@/components/homes/home-software-development-company/Capabilities";
-import Facts from "@/components/homes/home-software-development-company/Facts";
-import Hero from "@/components/homes/home-software-development-company/Hero";
-import MarqueeSlider from "@/components/homes/home-software-development-company/MarqueeSlider";
-import MarqueeSlider2 from "@/components/homes/home-software-development-company/MarqueeSlider2";
-import ParallaxBanner from "@/components/homes/home-software-development-company/ParallaxBanner";
-import ParallaxDivider from "@/components/homes/home-software-development-company/ParallaxDivider";
-import Projects from "@/components/homes/home-software-development-company/Projects";
-import Services from "@/components/homes/home-software-development-company/Services";
-import TechStacks from "@/components/homes/home-software-development-company/TechStacks";
 import type { Metadata } from "next";
+import Footer2 from "@/components/footers/Footer2";
+import { SectionRenderer } from "@/components/sections/SectionRenderer";
+import { sanityFetch } from "@/sanity/live";
+import { HOME_PAGE_QUERY } from "@/sanity/queries";
+import { urlFor } from "@/sanity/image";
 
-export const metadata: Metadata = {
-  title: "ZERAus | Digital Studio",
-  description:
-    "Websites, software, integrations and brands — built in Las Vegas by ZERAus.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { data } = await sanityFetch({ query: HOME_PAGE_QUERY, stega: false });
+  const seo = data?.seo;
+  const og = seo?.ogImage?.asset ? urlFor(seo.ogImage).width(1200).height(630).fit("crop").url() : undefined;
+  return {
+    title: seo?.metaTitle ?? undefined,
+    description: seo?.metaDescription ?? undefined,
+    keywords: seo?.keywords ?? undefined,
+    robots: seo?.noIndex ? { index: false, follow: false } : undefined,
+    openGraph: og ? { images: [{ url: og, width: 1200, height: 630 }] } : undefined,
+  };
+}
 
 /**
- * Home — the Rayo "software development company" layout.
- *
- * Section order is intentionally the template's. Each section still reads
- * from the template's JSON/hard-coded copy; the Sanity wiring happens
- * section-by-section per docs/SCHEMA_PLAN.md (homePage.sections[]).
+ * Home — `homePage.sections[]` from Sanity rendered through the Rayo blocks
+ * (docs/SCHEMA_PLAN.md §5). Add or reorder sections in the Studio.
  */
-export default function HomePage() {
+export default async function HomePage() {
+  const { data } = await sanityFetch({ query: HOME_PAGE_QUERY });
+
   return (
     <>
       <main id="mxd-page-content" className="mxd-page-content">
-        <Hero />
-        <MarqueeSlider />
-        <Services />
-        <About />
-        <ParallaxBanner />
-        <Capabilities />
-        <Projects />
-        <TechStacks />
-        <MarqueeSlider2 />
-        <Facts />
-        <ParallaxDivider />
-        <Cta />
+        <SectionRenderer sections={data?.sections} settings={data?.settings ?? null} />
+        {process.env.NODE_ENV === "development" && !data && (
+          <div className="mxd-section" style={{ padding: "160px 40px", textAlign: "center" }}>
+            <p className="t-large">Home page could not be read from Sanity.</p>
+            <p className="t-small t-muted">
+              The <code>zeraus</code> dataset is private: set <code>SANITY_API_READ_TOKEN</code> (a Viewer token) in <code>apps/web/.env.local</code> and restart <code>pnpm dev:web</code>.
+            </p>
+          </div>
+        )}
+        {process.env.NODE_ENV === "development" && data && (!data.sections || data.sections.length === 0) && (
+          <div className="mxd-section" style={{ padding: "160px 40px", textAlign: "center" }}>
+            <p className="t-large">No sections yet — add them under Website → Home Page in the Studio.</p>
+          </div>
+        )}
       </main>
-      <Footer2 />
+      <Footer2 text={data?.settings?.wordmark ?? undefined} />
     </>
   );
 }

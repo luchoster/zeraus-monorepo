@@ -5,7 +5,6 @@ import Blogs from "@/components/common/Blogs";
 import Cta from "@/components/common/Cta";
 import Facts from "@/components/common/Facts";
 import MarqueeSlider from "@/components/common/MarqueeSlider";
-import Footer2 from "@/components/footers/Footer2";
 import Hero2 from "@/components/other-pages/about/Hero2";
 import MarqueeSlider2 from "@/components/other-pages/about/MarqueeSlider2";
 import Team from "@/components/other-pages/about/Team";
@@ -47,7 +46,6 @@ export default function AboutUsPage() {
         <Blogs />
         <Cta />
       </main>
-      <Footer2 />
     </>
   );
 }

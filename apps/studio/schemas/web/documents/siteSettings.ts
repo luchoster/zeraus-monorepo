@@ -79,31 +79,12 @@ export const siteSettings = defineType({
 
     // ── Footer ──────────────────────────────────────────────
     defineField({
-      name: 'newsletter',
-      title: 'Newsletter',
-      type: 'object',
+      name: 'footerNavGroups',
+      title: 'Footer navigation',
+      type: 'array',
       group: 'footer',
-      options: { collapsible: true, collapsed: false },
-      fields: [
-        defineField({ name: 'enabled', title: 'Show subscribe form', type: 'boolean', initialValue: false }),
-        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'Subscribe to our insights:' }),
-        defineField({
-          name: 'provider',
-          title: 'Provider',
-          type: 'string',
-          options: { list: [{ title: 'Formspree', value: 'formspree' }, { title: 'Resend (API route)', value: 'resend' }], layout: 'radio' },
-          hidden: ({ parent }) => !parent?.enabled,
-        }),
-        defineField({
-          name: 'endpoint',
-          title: 'Endpoint URL',
-          type: 'url',
-          description: 'Formspree form URL. Not needed for Resend.',
-          hidden: ({ parent }) => !parent?.enabled || parent?.provider !== 'formspree',
-        }),
-        defineField({ name: 'successMessage', title: 'Success message', type: 'string', initialValue: 'Done! Thanks for subscribing.', hidden: ({ parent }) => !parent?.enabled }),
-        defineField({ name: 'errorMessage', title: 'Error message', type: 'string', initialValue: 'Ooops! Something went wrong. Please try again later.', hidden: ({ parent }) => !parent?.enabled }),
-      ],
+      description: 'Link groups shown in the site footer. Prefer this over Navigation → Footer menu.',
+      of: [defineArrayMember({ type: 'footerNavGroup' })],
     }),
     defineField({
       name: 'legalLinks',

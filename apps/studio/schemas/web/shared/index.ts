@@ -1,5 +1,6 @@
 export { imageWithAlt } from './imageWithAlt'
 export { link } from './link'
+export { footerNavGroup } from './footerNavGroup'
 export { seo } from './seo'
 export { socialLink } from './socialLink'
 export { navItem } from './navItem'

@@ -1,5 +1,4 @@
 import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
 
 import MarqueeSlider from "@/components/portfolios/MarqueeSlider";
 import PortfolioList from "@/components/portfolios/PortfolioList";
@@ -25,7 +24,6 @@ export default function WorksSimplePage() {
         <Testimonials />
         <Cta />
       </main>
-      <Footer2 />
     </>
   );
 }

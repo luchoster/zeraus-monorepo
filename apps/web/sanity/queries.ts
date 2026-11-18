@@ -115,7 +115,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(/* groq */ `*[_id == "siteSetting
   socialLinks[]{ _key, platform, label, url },
   headerCta ${LINK},
   menuPromo{ caption, "video": video.asset->url, "poster": poster.asset->url },
-  newsletter{ enabled, heading, provider, endpoint, successMessage, errorMessage },
+  footerNavGroups[]{ _key, title, links[] ${LINK} },
   legalLinks[] ${LINK},
   ${SEO},
   analytics{ gaId }

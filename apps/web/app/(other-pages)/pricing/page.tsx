@@ -1,7 +1,6 @@
 import VelocityMarquee from "@/components/animation/VelocityMarquee";
 import Blogs from "@/components/common/Blogs";
 import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
 import Partners from "@/components/other-pages/Partners";
 import Pricing from "@/components/other-pages/Pricing";
 import { Metadata } from "next";
@@ -64,7 +63,6 @@ export default function PricingPage() {
         <Blogs />
         <Cta />
       </main>
-      <Footer2 />
     </>
   );
 }

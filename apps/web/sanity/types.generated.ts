@@ -946,14 +946,11 @@ export type SiteSettings = {
       _type: "image";
     };
   };
-  newsletter?: {
-    enabled?: boolean;
-    heading?: string;
-    provider?: "formspree" | "resend";
-    endpoint?: string;
-    successMessage?: string;
-    errorMessage?: string;
-  };
+  footerNavGroups?: Array<
+    {
+      _key: string;
+    } & FooterNavGroup
+  >;
   legalLinks?: Array<
     {
       _key: string;
@@ -1382,6 +1379,16 @@ export type SocialLink = {
     | "other";
   label?: string;
   url: string;
+};
+
+export type FooterNavGroup = {
+  _type: "footerNavGroup";
+  title?: string;
+  links?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
 };
 
 export type Page = {
@@ -1899,6 +1906,7 @@ export type AllSanitySchemaTypes =
   | NavItem
   | ImageWithAlt
   | SocialLink
+  | FooterNavGroup
   | Page
   | CaseStudy
   | Testimonial
@@ -1931,7 +1939,7 @@ export type AllSanitySchemaTypes =
 
 // Source: ../web/sanity/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_id == "siteSettings"][0]{  title, tagline, siteUrl, wordmark, contactEmail, phone, address, defaultColorScheme, copyright,  logo {  ...,  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }}, logoLight {  ...,  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }},  socialLinks[]{ _key, platform, label, url },  headerCta {  label, kind, external, anchor, newTab,  internal->{ _type, "slug": slug.current }},  menuPromo{ caption, "video": video.asset->url, "poster": poster.asset->url },  newsletter{ enabled, heading, provider, endpoint, successMessage, errorMessage },  legalLinks[] {  label, kind, external, anchor, newTab,  internal->{ _type, "slug": slug.current }},  seo{ metaTitle, metaDescription, keywords, noIndex, ogImage {  ...,  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }} },  analytics{ gaId }}
+// Query: *[_id == "siteSettings"][0]{  title, tagline, siteUrl, wordmark, contactEmail, phone, address, defaultColorScheme, copyright,  logo {  ...,  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }}, logoLight {  ...,  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }},  socialLinks[]{ _key, platform, label, url },  headerCta {  label, kind, external, anchor, newTab,  internal->{ _type, "slug": slug.current }},  menuPromo{ caption, "video": video.asset->url, "poster": poster.asset->url },  footerNavGroups[]{ _key, title, links[] {  label, kind, external, anchor, newTab,  internal->{ _type, "slug": slug.current }} },  legalLinks[] {  label, kind, external, anchor, newTab,  internal->{ _type, "slug": slug.current }},  seo{ metaTitle, metaDescription, keywords, noIndex, ogImage {  ...,  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }} },  analytics{ gaId }}
 export type SITE_SETTINGS_QUERY_RESULT =
   | {
       title: null;
@@ -1948,7 +1956,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks: null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: null;
       analytics: null;
@@ -1968,7 +1976,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks: null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: null;
       analytics: null;
@@ -1988,7 +1996,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks: null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: null;
       analytics: null;
@@ -2023,7 +2031,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       }> | null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: null;
       analytics: null;
@@ -2043,7 +2051,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks: null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: {
         metaTitle: string | null;
@@ -2086,7 +2094,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks: null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: {
         metaTitle: string | null;
@@ -2129,7 +2137,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks: null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: {
         metaTitle: string | null;
@@ -2189,7 +2197,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks: null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: null;
       analytics: null;
@@ -2243,7 +2251,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks: null;
       headerCta: null;
       menuPromo: null;
-      newsletter: null;
+      footerNavGroups: null;
       legalLinks: null;
       seo: null;
       analytics: null;
@@ -2340,14 +2348,35 @@ export type SITE_SETTINGS_QUERY_RESULT =
         video: string | null;
         poster: string | null;
       } | null;
-      newsletter: {
-        enabled: boolean | null;
-        heading: string | null;
-        provider: "formspree" | "resend" | null;
-        endpoint: string | null;
-        successMessage: string | null;
-        errorMessage: string | null;
-      } | null;
+      footerNavGroups: Array<{
+        _key: string;
+        title: string | null;
+        links: Array<{
+          label: string;
+          kind: "anchor" | "external" | "internal";
+          external: string | null;
+          anchor: string | null;
+          newTab: boolean | null;
+          internal:
+            | {
+                _type: "caseStudy";
+                slug: string;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | {
+                _type: "post";
+                slug: string;
+              }
+            | {
+                _type: "service";
+                slug: string;
+              }
+            | null;
+        }> | null;
+      }> | null;
       legalLinks: Array<{
         label: string;
         kind: "anchor" | "external" | "internal";
@@ -8211,7 +8240,7 @@ export type HERO_GALLERY_QUERY_RESULT = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_id == "siteSettings"][0]{\n  title, tagline, siteUrl, wordmark, contactEmail, phone, address, defaultColorScheme, copyright,\n  logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, logoLight {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  socialLinks[]{ _key, platform, label, url },\n  headerCta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n},\n  menuPromo{ caption, "video": video.asset->url, "poster": poster.asset->url },\n  newsletter{ enabled, heading, provider, endpoint, successMessage, errorMessage },\n  legalLinks[] {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n},\n  seo{ metaTitle, metaDescription, keywords, noIndex, ogImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n  analytics{ gaId }\n}': SITE_SETTINGS_QUERY_RESULT;
+    '*[_id == "siteSettings"][0]{\n  title, tagline, siteUrl, wordmark, contactEmail, phone, address, defaultColorScheme, copyright,\n  logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, logoLight {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  socialLinks[]{ _key, platform, label, url },\n  headerCta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n},\n  menuPromo{ caption, "video": video.asset->url, "poster": poster.asset->url },\n  footerNavGroups[]{ _key, title, links[] {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n} },\n  legalLinks[] {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n},\n  seo{ metaTitle, metaDescription, keywords, noIndex, ogImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n  analytics{ gaId }\n}': SITE_SETTINGS_QUERY_RESULT;
     '*[_id == "navigation"][0]{\n  mainMenu[]{ _key, link {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, children[]{ _key, link {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n} } },\n  footerMenu[]{ _key, link {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n} }\n}': NAVIGATION_QUERY_RESULT;
     '*[_id == "homePage"][0]{\n  _id, _type, title, seo{ metaTitle, metaDescription, keywords, noIndex, ogImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n  sections[]{\n  _key, _type, anchor, theme,\n  _type == "heroSection" => {\n    variant, caption, wordmark, title, tagline, description, marqueeItems, valuesLeft, valuesRight,\n    availabilityMark, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, videoModalUrl, trustText,\n    media[]{ _key, kind, animation, image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, "video": video.asset->url, "poster": poster.asset->url },\n    dividerVideo{ "video": video.asset->url, "poster": poster.asset->url },\n    stats[]{ _key, value, suffix, label },\n    trustAvatars[] {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n    "caseStudies": select(\n      variant == "pinned" => *[_type == "caseStudy" && featured == true] | order(order asc, _createdAt desc)[0...7]{\n        _id, title, "slug": slug.current, previewImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n      },\n      null\n    )\n  },\n  _type == "marqueeSection" => { items, direction, muted },\n  _type == "servicesSection" => {\n    heading,\n    cards[]{ _key, size, theme, imagePosition, imageAnimation, service->{\n  _id, title, shortTitle, excerpt, tags, "slug": slug.current,\n  illustration {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, cardImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, hoverImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n} }\n  },\n  _type == "aboutSection" => { heading, body, valuesLeft, valuesRight, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n} },\n  _type == "imageDividerSection" => { image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, parallaxScale },\n  _type == "capabilitiesSection" => { heading, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, services[]->{\n  _id, title, shortTitle, excerpt, tags, "slug": slug.current,\n  illustration {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, cardImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, hoverImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n} },\n  _type == "caseStudiesSection" => {\n    heading, description, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n},\n    "caseStudies": select(\n      count(caseStudies) > 0 => caseStudies[]->{\n  _id, title, tagline, tags, url, "slug": slug.current, previewImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n},\n      *[_type == "caseStudy" && featured == true] | order(order asc, _createdAt desc)[0...6]{\n  _id, title, tagline, tags, url, "slug": slug.current, previewImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n}\n    )\n  },\n  _type == "techStackSection" => {\n    heading,\n    "items": select(\n      count(items) > 0 => items[]->{ _id, name, url, category, logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n      *[_type == "techStack"] | order(order asc, name asc){ _id, name, url, category, logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} }\n    )\n  },\n  _type == "statsSection" => { stats[]{ _key, value, suffix, label, icon {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} } },\n  _type == "partnersSection" => {\n    heading,\n    "partners": select(\n      count(partners) > 0 => partners[]->{ _id, name, url, logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, logoLight {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n      *[_type == "partner"] | order(order asc, name asc){ _id, name, url, logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, logoLight {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} }\n    )\n  },\n  _type == "testimonialsSection" => {\n    heading,\n    "testimonials": select(\n      count(testimonials) > 0 => testimonials[]->{\n  _id, quote, author, role, company, companyUrl, rating,\n  avatar {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, companyLogo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  caseStudy->{ title, "slug": slug.current }\n},\n      *[_type == "testimonial"] | order(_createdAt desc){\n  _id, quote, author, role, company, companyUrl, rating,\n  avatar {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, companyLogo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  caseStudy->{ title, "slug": slug.current }\n}\n    )\n  },\n  _type == "latestPostsSection" => {\n    heading, description, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n},\n    "posts": select(\n      count(posts) > 0 => posts[]->{\n  _id, title, publishedAt, "slug": slug.current, coverImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  "categories": categories[]->title\n},\n      *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...3]{\n  _id, title, publishedAt, "slug": slug.current, coverImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  "categories": categories[]->title\n}\n    )\n  },\n  _type == "faqSection" => { heading, intro, faqs[]->{ _id, question, answer } },\n  _type == "ctaSection" => { caption, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, icon {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, backgroundImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, images[] {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n  _type == "richTextSection" => { heading, body },\n  _type == "formSection" => { form, heading, intro, successMessage },\n  _type == "creditsSection" => { heading, items[]{ _key, name, url } }\n},\n  "settings": *[_id == "siteSettings"][0]{ wordmark, title, headerCta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, socialLinks[]{ _key, platform, label, url } }\n}': HOME_PAGE_QUERY_RESULT;
     '*[_type == "page" && slug.current == $slug][0]{\n  _id, _type, title, "slug": slug.current, seo{ metaTitle, metaDescription, keywords, noIndex, ogImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n  sections[]{\n  _key, _type, anchor, theme,\n  _type == "heroSection" => {\n    variant, caption, wordmark, title, tagline, description, marqueeItems, valuesLeft, valuesRight,\n    availabilityMark, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, videoModalUrl, trustText,\n    media[]{ _key, kind, animation, image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, "video": video.asset->url, "poster": poster.asset->url },\n    dividerVideo{ "video": video.asset->url, "poster": poster.asset->url },\n    stats[]{ _key, value, suffix, label },\n    trustAvatars[] {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n    "caseStudies": select(\n      variant == "pinned" => *[_type == "caseStudy" && featured == true] | order(order asc, _createdAt desc)[0...7]{\n        _id, title, "slug": slug.current, previewImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n      },\n      null\n    )\n  },\n  _type == "marqueeSection" => { items, direction, muted },\n  _type == "servicesSection" => {\n    heading,\n    cards[]{ _key, size, theme, imagePosition, imageAnimation, service->{\n  _id, title, shortTitle, excerpt, tags, "slug": slug.current,\n  illustration {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, cardImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, hoverImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n} }\n  },\n  _type == "aboutSection" => { heading, body, valuesLeft, valuesRight, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n} },\n  _type == "imageDividerSection" => { image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, parallaxScale },\n  _type == "capabilitiesSection" => { heading, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, services[]->{\n  _id, title, shortTitle, excerpt, tags, "slug": slug.current,\n  illustration {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, cardImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, hoverImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n} },\n  _type == "caseStudiesSection" => {\n    heading, description, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n},\n    "caseStudies": select(\n      count(caseStudies) > 0 => caseStudies[]->{\n  _id, title, tagline, tags, url, "slug": slug.current, previewImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n},\n      *[_type == "caseStudy" && featured == true] | order(order asc, _createdAt desc)[0...6]{\n  _id, title, tagline, tags, url, "slug": slug.current, previewImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}\n}\n    )\n  },\n  _type == "techStackSection" => {\n    heading,\n    "items": select(\n      count(items) > 0 => items[]->{ _id, name, url, category, logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n      *[_type == "techStack"] | order(order asc, name asc){ _id, name, url, category, logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} }\n    )\n  },\n  _type == "statsSection" => { stats[]{ _key, value, suffix, label, icon {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} } },\n  _type == "partnersSection" => {\n    heading,\n    "partners": select(\n      count(partners) > 0 => partners[]->{ _id, name, url, logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, logoLight {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n      *[_type == "partner"] | order(order asc, name asc){ _id, name, url, logo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, logoLight {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} }\n    )\n  },\n  _type == "testimonialsSection" => {\n    heading,\n    "testimonials": select(\n      count(testimonials) > 0 => testimonials[]->{\n  _id, quote, author, role, company, companyUrl, rating,\n  avatar {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, companyLogo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  caseStudy->{ title, "slug": slug.current }\n},\n      *[_type == "testimonial"] | order(_createdAt desc){\n  _id, quote, author, role, company, companyUrl, rating,\n  avatar {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, companyLogo {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, image {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  caseStudy->{ title, "slug": slug.current }\n}\n    )\n  },\n  _type == "latestPostsSection" => {\n    heading, description, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n},\n    "posts": select(\n      count(posts) > 0 => posts[]->{\n  _id, title, publishedAt, "slug": slug.current, coverImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  "categories": categories[]->title\n},\n      *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...3]{\n  _id, title, publishedAt, "slug": slug.current, coverImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n},\n  "categories": categories[]->title\n}\n    )\n  },\n  _type == "faqSection" => { heading, intro, faqs[]->{ _id, question, answer } },\n  _type == "ctaSection" => { caption, cta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, icon {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, backgroundImage {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n}, images[] {\n  ...,\n  asset->{ _id, url, metadata{ lqip, dimensions{ width, height, aspectRatio } } }\n} },\n  _type == "richTextSection" => { heading, body },\n  _type == "formSection" => { form, heading, intro, successMessage },\n  _type == "creditsSection" => { heading, items[]{ _key, name, url } }\n},\n  "settings": *[_id == "siteSettings"][0]{ wordmark, title, headerCta {\n  label, kind, external, anchor, newTab,\n  internal->{ _type, "slug": slug.current }\n}, socialLinks[]{ _key, platform, label, url } }\n}': PAGE_BY_SLUG_QUERY_RESULT;

@@ -1,9 +1,0 @@
-[
-  { "label": "Home", "href": "/" },
-  { "label": "Our Work", "href": "/our-work" },
-  { "label": "Services", "href": "/services" },
-  { "label": "About", "href": "/about-us" },
-  { "label": "Book a Call", "href": "/book-a-call" },
-  { "label": "Make a Payment", "href": "/make-a-payment" },
-  { "label": "Contact", "href": "/contact" }
-]

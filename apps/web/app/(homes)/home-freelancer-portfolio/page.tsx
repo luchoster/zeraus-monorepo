@@ -1,7 +1,6 @@
 import Blogs from "@/components/common/Blogs";
 import Cta from "@/components/common/Cta";
 import Facts from "@/components/common/Facts";
-import Footer2 from "@/components/footers/Footer2";
 import Projects from "@/components/homes/home-1/Projects";
 
 import About from "@/components/homes/home-freelancer-portfolio/About";
@@ -43,7 +42,6 @@ export default function HomeFreelancerPortfolioPage() {
         <Blogs />
         <Cta />
       </main>
-      <Footer2 text="alexwalker" />
     </>
   );
 }

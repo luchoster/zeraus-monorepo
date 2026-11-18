@@ -1,6 +1,5 @@
 import Blogs from "@/components/common/Blogs";
 import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
 import Hero from "@/components/other-pages/services/Hero";
 import ParallaxDivider from "@/components/other-pages/services/ParallaxDivider";
 import Services from "@/components/other-pages/services/Services";
@@ -24,7 +23,6 @@ export default function ServicesPage() {
         <Blogs />
         <Cta />
       </main>
-      <Footer2 />
     </>
   );
 }

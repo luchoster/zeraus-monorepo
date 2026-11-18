@@ -1,4 +1,3 @@
-import Footer2 from "@/components/footers/Footer2";
 
 import About from "@/components/homes/home-designer/About";
 import Hero from "@/components/homes/home-designer/Hero";
@@ -22,7 +21,6 @@ export default function HomeDesignerPage() {
         <About />
         <Services />
       </main>
-      <Footer2 text="alexwalker" />
     </>
   );
 }

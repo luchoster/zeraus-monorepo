@@ -1,6 +1,5 @@
 import Blogs from "@/components/common/Blogs";
 import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
 
 import About from "@/components/homes/home-software-development-company/About";
 import Capabilities from "@/components/homes/home-software-development-company/Capabilities";
@@ -38,7 +37,6 @@ export default function HomeSoftwareDevelopmentCompanyPage() {
         <Blogs />
         <Cta />
       </main>
-      <Footer2 />
     </>
   );
 }

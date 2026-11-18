@@ -12,7 +12,6 @@ import Testimonials from "@/components/other-pages/Testimonials";
 import ParallaxBackround from "@/components/other-pages/about/ParallaxBackround";
 import Blogs from "@/components/common/Blogs";
 import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title:
@@ -40,7 +39,6 @@ export default function AboutMePage() {
         <Blogs title="My journal" />
         <Cta />
       </main>
-      <Footer2 />
     </>
   );
 }

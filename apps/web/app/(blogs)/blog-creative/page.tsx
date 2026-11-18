@@ -1,6 +1,5 @@
 import Blogs2 from "@/components/blogs/Blogs2";
 import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title:
@@ -18,7 +17,6 @@ export default function BlogCreativePage() {
         <Blogs2 />
         <Cta />
       </main>
-      <Footer2 />
     </>
   );
 }

@@ -1,6 +1,5 @@
 import Blogs from "@/components/common/Blogs";
 import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
 
 import About from "@/components/homes/home-web-agency/About";
 
@@ -33,7 +32,6 @@ export default function HomeWebAgencyPage() {
         <Blogs />
         <Cta />
       </main>
-      <Footer2 />
     </>
   );
 }

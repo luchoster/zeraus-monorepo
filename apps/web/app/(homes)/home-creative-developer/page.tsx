@@ -1,6 +1,5 @@
 import Blogs from "@/components/common/Blogs";
 import Cta from "@/components/common/Cta";
-import Footer2 from "@/components/footers/Footer2";
 
 import About from "@/components/homes/home-creative-developer/About";
 import Hero from "@/components/homes/home-creative-developer/Hero";
@@ -24,7 +23,6 @@ export default function HomeCreativeDeveloperPage() {
         <Blogs />
         <Cta />
       </main>
-      <Footer2 text="alexwalker" />
     </>
   );
 }

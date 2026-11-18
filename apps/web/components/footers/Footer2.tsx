@@ -1,218 +1,250 @@
-import Link from "next/link";
-import footerNav from "@/data/footer-nav.json";
-import socials from "@/data/socials.json";
 import AnimatedButton from "../animation/AnimatedButton";
-import SubscribeForm from "./SubscribeForm";
+import { linkTarget, resolveHref, type QueriedLink } from "@/lib/links";
 
-export default function Footer2({ text = "zera.us" }: { text?: string }) {
+const PLATFORM_LABELS: Record<string, string> = {
+  x: "X / Twitter",
+  instagram: "Instagram",
+  linkedin: "LinkedIn",
+  github: "GitHub",
+  dribbble: "Dribbble",
+  behance: "Behance",
+  youtube: "YouTube",
+  facebook: "Facebook",
+  tiktok: "TikTok",
+  other: "Other",
+};
+
+type FooterLink = NonNullable<QueriedLink> & { _key?: string };
+
+export type Footer2Settings = {
+  wordmark?: string | null;
+  title?: string | null;
+  tagline?: string | null;
+  contactEmail?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  copyright?: string | null;
+  socialLinks?: Array<{
+    _key?: string;
+    platform?: string | null;
+    label?: string | null;
+    url?: string | null;
+  }> | null;
+  legalLinks?: Array<FooterLink | null> | null;
+  footerNavGroups?: Array<{
+    _key?: string;
+    title?: string | null;
+    links?: Array<FooterLink | null> | null;
+  }> | null;
+};
+
+function PointIcon() {
+  return (
+    <svg
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      x="0px"
+      y="0px"
+      width="20px"
+      height="20px"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path
+        fill="currentColor"
+        d="M19.6,9.6c0,0-3,0-4,0c-0.4,0-1.8-0.2-1.8-0.2c-0.6-0.1-1.1-0.2-1.6-0.6c-0.5-0.3-0.9-0.8-1.2-1.2
+            c-0.3-0.4-0.4-0.9-0.5-1.4c0,0-0.1-1.1-0.2-1.5c-0.1-1.1,0-4.4,0-4.4C10.4,0.2,10.2,0,10,0S9.6,0.2,9.6,0.4c0,0,0.1,3.3,0,4.4
+            c0,0.4-0.2,1.5-0.2,1.5C9.4,6.7,9.2,7.2,9,7.6C8.7,8.1,8.2,8.5,7.8,8.9c-0.5,0.3-1,0.5-1.6,0.6c0,0-1.2,0.1-1.7,0.2
+            c-1,0.1-4.2,0-4.2,0C0.2,9.6,0,9.8,0,10c0,0.2,0.2,0.4,0.4,0.4c0,0,3.1-0.1,4.2,0c0.4,0,1.7,0.2,1.7,0.2c0.6,0.1,1.1,0.2,1.6,0.6
+            c0.4,0.3,0.8,0.7,1.1,1.1c0.3,0.5,0.5,1,0.6,1.6c0,0,0.1,1.3,0.2,1.7c0,1,0,4.1,0,4.1c0,0.2,0.2,0.4,0.4,0.4s0.4-0.2,0.4-0.4
+            c0,0,0-3.1,0-4.1c0-0.4,0.2-1.7,0.2-1.7c0.1-0.6,0.2-1.1,0.6-1.6c0.3-0.4,0.7-0.8,1.1-1.1c0.5-0.3,1-0.5,1.6-0.6
+            c0,0,1.3-0.1,1.8-0.2c1,0,4,0,4,0c0.2,0,0.4-0.2,0.4-0.4C20,9.8,19.8,9.6,19.6,9.6L19.6,9.6z"
+      />
+    </svg>
+  );
+}
+
+function socialLabel(item: {
+  platform?: string | null;
+  label?: string | null;
+}): string {
+  if (item.label) return item.label;
+  const platform = item.platform ?? "";
+  return PLATFORM_LABELS[platform] || platform || "Social";
+}
+
+export default function Footer2({
+  settings,
+  text,
+}: {
+  settings?: Footer2Settings | null;
+  /** @deprecated Prefer settings.wordmark */
+  text?: string;
+}) {
+  const wordmark = settings?.wordmark || text || "zera.us";
+  const title = settings?.title || "ZERAus";
+  const groups = (settings?.footerNavGroups ?? []).filter(Boolean);
+  const legalLinks = (settings?.legalLinks ?? []).filter(Boolean) as FooterLink[];
+  const socialLinks = (settings?.socialLinks ?? []).filter(
+    (s): s is NonNullable<typeof s> & { url: string } => Boolean(s?.url)
+  );
+  const email = settings?.contactEmail?.trim() || "";
+  const phone = settings?.phone?.trim() || "";
+  const address = settings?.address?.trim() || "";
+  const tagline = settings?.tagline?.trim() || "";
+  const copyrightLine = settings?.copyright?.trim() || title;
+  const year = new Date().getFullYear();
+
+  const showGroupTitles =
+    groups.length > 1 || groups.some((g) => Boolean(g?.title?.trim()));
+
   return (
     <footer id="mxd-footer" className="mxd-footer">
-      {/* Footer Block - Fullwidth Text Start */}
       <div className="mxd-footer__text-wrap">
         <div className="fullwidth-text__tl-trigger" />
         <div className="mxd-footer__fullwidth-text anim-top-to-bottom">
-          <span className="zr-footer-wordmark">{text}</span>
+          <span className="zr-footer-wordmark">{wordmark}</span>
         </div>
       </div>
-      {/* Footer Block - Fullwidth Text End */}
-      {/* Footer Block - Info Columns Start */}
-      <div className="mxd-footer__footer-blocks">
-        {/* single column */}
-        <div className="footer-blocks__column animate-card-3">
-          {/* inner card */}
-          <div className="footer-blocks__card fullheight-card">
-            {/* footer navigation */}
-            <div className="footer-blocks__nav">
-              <ul className="footer-nav">
-                {footerNav.map(
-                  (
-                    item: { label: string; href: string; counter?: number },
-                    idx: number
-                  ) => (
-                    <li className="footer-nav__item anim-uni-in-up" key={idx}>
-                      <AnimatedButton
-                        href={item.href}
-                        text={item.label}
-                        className="footer-nav__link btn-anim"
-                      />
 
-                      {item.counter && (
-                        <p className="footer-nav__counter">
-                          <svg
-                            version="1.1"
-                            xmlns="http://www.w3.org/2000/svg"
-                            x="0px"
-                            y="0px"
-                            width="20px"
-                            height="20px"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
+      <div className="mxd-footer__footer-blocks">
+        <div className="footer-blocks__column animate-card-3">
+          <div className="footer-blocks__card fullheight-card">
+            <div className="footer-blocks__nav">
+              {groups.map((group, groupIdx) => {
+                const links = (group?.links ?? []).filter(Boolean) as FooterLink[];
+                if (!links.length) return null;
+                return (
+                  <div key={group?._key || `group-${groupIdx}`}>
+                    {showGroupTitles && group?.title?.trim() ? (
+                      <div className="footer-blocks__title anim-uni-in-up">
+                        <p className="footer-blocks__title-m">{group.title}</p>
+                      </div>
+                    ) : null}
+                    <ul className="footer-nav">
+                      {links.map((item, idx) => {
+                        const href = resolveHref(item);
+                        if (!href) return null;
+                        const label = item.label || "Link";
+                        const target = linkTarget(item);
+                        return (
+                          <li
+                            className="footer-nav__item anim-uni-in-up"
+                            key={item._key || `${groupIdx}-${idx}`}
                           >
-                            <path
-                              fill="currentColor"
-                              d="M19.6,9.6c0,0-3,0-4,0c-0.4,0-1.8-0.2-1.8-0.2c-0.6-0.1-1.1-0.2-1.6-0.6c-0.5-0.3-0.9-0.8-1.2-1.2
-                  c-0.3-0.4-0.4-0.9-0.5-1.4c0,0-0.1-1.1-0.2-1.5c-0.1-1.1,0-4.4,0-4.4C10.4,0.2,10.2,0,10,0S9.6,0.2,9.6,0.4c0,0,0.1,3.3,0,4.4
-                  c0,0.4-0.2,1.5-0.2,1.5C9.4,6.7,9.2,7.2,9,7.6C8.7,8.1,8.2,8.5,7.8,8.9c-0.5,0.3-1,0.5-1.6,0.6c0,0-1.2,0.1-1.7,0.2
-                  c-1,0.1-4.2,0-4.2,0C0.2,9.6,0,9.8,0,10c0,0.2,0.2,0.4,0.4,0.4c0,0,3.1-0.1,4.2,0c0.4,0,1.7,0.2,1.7,0.2c0.6,0.1,1.1,0.2,1.6,0.6
-                  c0.4,0.3,0.8,0.7,1.1,1.1c0.3,0.5,0.5,1,0.6,1.6c0,0,0.1,1.3,0.2,1.7c0,1,0,4.1,0,4.1c0,0.2,0.2,0.4,0.4,0.4s0.4-0.2,0.4-0.4
-                  c0,0,0-3.1,0-4.1c0-0.4,0.2-1.7,0.2-1.7c0.1-0.6,0.2-1.1,0.6-1.6c0.3-0.4,0.7-0.8,1.1-1.1c0.5-0.3,1-0.5,1.6-0.6
-                  c0,0,1.3-0.1,1.8-0.2c1,0,4,0,4,0c0.2,0,0.4-0.2,0.4-0.4C20,9.8,19.8,9.6,19.6,9.6L19.6,9.6z"
+                            <AnimatedButton
+                              href={href}
+                              text={label}
+                              target={target}
+                              className="footer-nav__link btn-anim"
                             />
-                          </svg>
-                          <span>{item.counter}</span>
-                        </p>
-                      )}
-                    </li>
-                  )
-                )}
-              </ul>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                );
+              })}
             </div>
-            {/* links */}
-            <div className="footer-blocks__links anim-uni-in-up">
-              <AnimatedButton
-                text="Privacy Policy"
-                as={"a"}
-                className="btn btn-line-xsmall btn-muted slide-right anim-no-delay"
-                href="#"
-              >
-                <i className="ph ph-arrow-right" />
-              </AnimatedButton>
-              <AnimatedButton
-                text="Terms &amp; conditions"
-                as={"a"}
-                className="btn btn-line-xsmall btn-muted slide-right anim-no-delay"
-                href="#"
-              >
-                <i className="ph ph-arrow-right" />
-              </AnimatedButton>
-            </div>
+            {legalLinks.length > 0 ? (
+              <div className="footer-blocks__links anim-uni-in-up">
+                {legalLinks.map((item, idx) => {
+                  const href = resolveHref(item);
+                  if (!href) return null;
+                  const label = item.label || "Link";
+                  const target = linkTarget(item);
+                  return (
+                    <AnimatedButton
+                      key={item._key || `legal-${idx}`}
+                      text={label}
+                      as={"a"}
+                      className="btn btn-line-xsmall btn-muted slide-right anim-no-delay"
+                      href={href}
+                      target={target}
+                    >
+                      <i className="ph ph-arrow-right" />
+                    </AnimatedButton>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
         </div>
-        {/* single column */}
+
         <div className="footer-blocks__column animate-card-3">
-          {/* inner card */}
-          <div className="footer-blocks__card">
-            <p className="mxd-point-subtitle anim-uni-in-up">
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                x="0px"
-                y="0px"
-                width="20px"
-                height="20px"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill="currentColor"
-                  d="M19.6,9.6c0,0-3,0-4,0c-0.4,0-1.8-0.2-1.8-0.2c-0.6-0.1-1.1-0.2-1.6-0.6c-0.5-0.3-0.9-0.8-1.2-1.2
-            c-0.3-0.4-0.4-0.9-0.5-1.4c0,0-0.1-1.1-0.2-1.5c-0.1-1.1,0-4.4,0-4.4C10.4,0.2,10.2,0,10,0S9.6,0.2,9.6,0.4c0,0,0.1,3.3,0,4.4
-            c0,0.4-0.2,1.5-0.2,1.5C9.4,6.7,9.2,7.2,9,7.6C8.7,8.1,8.2,8.5,7.8,8.9c-0.5,0.3-1,0.5-1.6,0.6c0,0-1.2,0.1-1.7,0.2
-            c-1,0.1-4.2,0-4.2,0C0.2,9.6,0,9.8,0,10c0,0.2,0.2,0.4,0.4,0.4c0,0,3.1-0.1,4.2,0c0.4,0,1.7,0.2,1.7,0.2c0.6,0.1,1.1,0.2,1.6,0.6
-            c0.4,0.3,0.8,0.7,1.1,1.1c0.3,0.5,0.5,1,0.6,1.6c0,0,0.1,1.3,0.2,1.7c0,1,0,4.1,0,4.1c0,0.2,0.2,0.4,0.4,0.4s0.4-0.2,0.4-0.4
-            c0,0,0-3.1,0-4.1c0-0.4,0.2-1.7,0.2-1.7c0.1-0.6,0.2-1.1,0.6-1.6c0.3-0.4,0.7-0.8,1.1-1.1c0.5-0.3,1-0.5,1.6-0.6
-            c0,0,1.3-0.1,1.8-0.2c1,0,4,0,4,0c0.2,0,0.4-0.2,0.4-0.4C20,9.8,19.8,9.6,19.6,9.6L19.6,9.6z"
-                />
-              </svg>
-              <a href="mailto:example@example.com?subject=Message%20from%20your%20site">
-                hello@rayostudio.com
-              </a>
-            </p>
-          </div>
-          {/* inner card */}
-          <div className="footer-blocks__card">
-            <p className="mxd-point-subtitle anim-uni-in-up">
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                x="0px"
-                y="0px"
-                width="20px"
-                height="20px"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill="currentColor"
-                  d="M19.6,9.6c0,0-3,0-4,0c-0.4,0-1.8-0.2-1.8-0.2c-0.6-0.1-1.1-0.2-1.6-0.6c-0.5-0.3-0.9-0.8-1.2-1.2
-            c-0.3-0.4-0.4-0.9-0.5-1.4c0,0-0.1-1.1-0.2-1.5c-0.1-1.1,0-4.4,0-4.4C10.4,0.2,10.2,0,10,0S9.6,0.2,9.6,0.4c0,0,0.1,3.3,0,4.4
-            c0,0.4-0.2,1.5-0.2,1.5C9.4,6.7,9.2,7.2,9,7.6C8.7,8.1,8.2,8.5,7.8,8.9c-0.5,0.3-1,0.5-1.6,0.6c0,0-1.2,0.1-1.7,0.2
-            c-1,0.1-4.2,0-4.2,0C0.2,9.6,0,9.8,0,10c0,0.2,0.2,0.4,0.4,0.4c0,0,3.1-0.1,4.2,0c0.4,0,1.7,0.2,1.7,0.2c0.6,0.1,1.1,0.2,1.6,0.6
-            c0.4,0.3,0.8,0.7,1.1,1.1c0.3,0.5,0.5,1,0.6,1.6c0,0,0.1,1.3,0.2,1.7c0,1,0,4.1,0,4.1c0,0.2,0.2,0.4,0.4,0.4s0.4-0.2,0.4-0.4
-            c0,0,0-3.1,0-4.1c0-0.4,0.2-1.7,0.2-1.7c0.1-0.6,0.2-1.1,0.6-1.6c0.3-0.4,0.7-0.8,1.1-1.1c0.5-0.3,1-0.5,1.6-0.6
-            c0,0,1.3-0.1,1.8-0.2c1,0,4,0,4,0c0.2,0,0.4-0.2,0.4-0.4C20,9.8,19.8,9.6,19.6,9.6L19.6,9.6z"
-                />
-              </svg>
-              <a href="tel:+12127089400">+1 212-708-9400</a>
-            </p>
-          </div>
-          {/* inner card */}
-          <div className="footer-blocks__card fill-card notify">
-            {/* card title */}
-            <div className="footer-blocks__title anim-uni-in-up">
-              <p className="footer-blocks__title-m">
-                Subscribe to our insights:
+          {email ? (
+            <div className="footer-blocks__card">
+              <p className="mxd-point-subtitle anim-uni-in-up">
+                <PointIcon />
+                <a href={`mailto:${email}`}>{email}</a>
               </p>
             </div>
-            {/* subscribe form container */}
-            <div className="form-container anim-uni-in-up">
-              {/* reply messages */}
-              <div className="form__reply subscription-ok">
-                <span className="reply__text">
-                  Done! Thanks for subscribing.
-                </span>
-              </div>
-              <div className="form__reply subscription-error">
-                <span className="reply__text">
-                  Ooops! Something went wrong. Please try again later.
-                </span>
-              </div>
-              {/* subscribe form */}
-              <SubscribeForm />
+          ) : null}
+          {phone ? (
+            <div className="footer-blocks__card">
+              <p className="mxd-point-subtitle anim-uni-in-up">
+                <PointIcon />
+                <a href={`tel:${phone.replace(/[^\d+]/g, "")}`}>{phone}</a>
+              </p>
             </div>
-          </div>
+          ) : null}
+          {address ? (
+            <div className="footer-blocks__card">
+              <p className="mxd-point-subtitle anim-uni-in-up">
+                <PointIcon />
+                <span style={{ whiteSpace: "pre-line" }}>{address}</span>
+              </p>
+            </div>
+          ) : null}
+          {!email && !phone && !address && tagline ? (
+            <div className="footer-blocks__card">
+              <p className="mxd-point-subtitle anim-uni-in-up">
+                <PointIcon />
+                <span>{tagline}</span>
+              </p>
+            </div>
+          ) : null}
         </div>
-        {/* single column */}
+
         <div className="footer-blocks__column animate-card-3">
-          {/* inner card */}
           <div className="footer-blocks__card fullheight-card">
-            {/* nav block */}
-            <div className="footer-blocks__block">
-              {/* card title */}
-              <div className="footer-blocks__title anim-uni-in-up">
-                <p className="footer-blocks__title-l">Follow us</p>
-              </div>
-              {/* footer socials */}
-              <div className="footer-blocks__socials">
-                <ul className="footer-socials">
-                  {socials.map((social, i) => (
-                    <li key={i} className="footer-socials__item anim-uni-in-up">
-                      <a
-                        href={social.url}
-                        className="footer-socials__link"
-                        target="_blank"
+            {socialLinks.length > 0 ? (
+              <div className="footer-blocks__block">
+                <div className="footer-blocks__title anim-uni-in-up">
+                  <p className="footer-blocks__title-l">Follow us</p>
+                </div>
+                <div className="footer-blocks__socials">
+                  <ul className="footer-socials">
+                    {socialLinks.map((social, i) => (
+                      <li
+                        key={social._key || i}
+                        className="footer-socials__item anim-uni-in-up"
                       >
-                        {social.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                        <a
+                          href={social.url}
+                          className="footer-socials__link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {socialLabel(social)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-            </div>
-            {/* links */}
+            ) : null}
             <div className="footer-blocks__links anim-uni-in-up">
               <p className="t-xsmall t-muted">
-                <a className="no-effect" href="https://zera.us">
-                  ZERAus
-                </a>
+                <span className="no-effect">{copyrightLine}</span>
                 <i className="ph-bold ph-copyright" />
-                {new Date().getFullYear()}
+                {year}
               </p>
             </div>
           </div>
         </div>
       </div>
-      {/* Footer Block - Info Columns End */}
     </footer>
   );
 }

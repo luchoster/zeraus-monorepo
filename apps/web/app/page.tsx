@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Footer2 from "@/components/footers/Footer2";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { sanityFetch } from "@/sanity/live";
 import { HOME_PAGE_QUERY } from "@/sanity/queries";
@@ -43,7 +42,6 @@ export default async function HomePage() {
           </div>
         )}
       </main>
-      <Footer2 text={data?.settings?.wordmark ?? undefined} />
     </>
   );
 }
